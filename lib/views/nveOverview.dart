@@ -1,37 +1,40 @@
 import 'package:flutter/material.dart';
 import '../utils/nveRest.dart';
+import './nveRegionData.dart';
 import 'dart:async';
 class NveOverview extends StatefulWidget {
+
   @override
   createState() => new NveOverviewState();
 }
 
 class NveOverviewState extends State<NveOverview> {
 
-
-  Future<List<String>> nveResponse = loadRegions();
-  final _nvePlaces = ['1','2', '3'];
+  List _nvePlaces = [];
+  List _regionData = [];
   final _biggerFont = const TextStyle(fontSize: 18.0);
   final _marked = new Set<String>();
-  String _current = '';
+  List<String> _current = [];
+
 
   Widget _buildNveList() {
     int count = 0;
     return new ListView.builder(
         padding: const EdgeInsets.all(18.0),
         itemBuilder: (context, i) {
-          if (i.isOdd) return new Divider();
-          if (count < _nvePlaces.length)
-            return _buildRow(_nvePlaces[count++]);
+          if(count < _nvePlaces.length) {
+            if (i.isOdd) return new Divider();
+            return _buildRow(_nvePlaces[count++][1], _nvePlaces[count++][0].toString() );
+          }
         }
     );
   }
 
-  Widget _buildRow(String place) {
-    final alreadyMarked = _marked.contains(place);
+  Widget _buildRow(String region, String regionId) {
+    final alreadyMarked = _marked.contains(regionId);
     return new ListTile(
         title: new Text(
-          place,
+          region,
           style: _biggerFont,
         ),
         trailing: new Icon(
@@ -42,19 +45,22 @@ class NveOverviewState extends State<NveOverview> {
         onTap: () {
           setState(() {
             if (alreadyMarked) {
-              _marked.remove(place);
+              _marked.remove(regionId);
             } else {
-              _marked.add(place);
+              _marked.add(regionId);
             }
-            _current = place;
+            _current = [region, regionId];
           });
-          _openSingle();
+          _openRegion();
         }
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    if(_nvePlaces.length == 0)
+      getRegions();
+    print('build');
     return new Scaffold(
       appBar: new AppBar(
         title: new Text('NVE steder'),
@@ -66,21 +72,35 @@ class NveOverviewState extends State<NveOverview> {
     );
   }
 
-  void _openSingle() {
-    print('open multiple...');
+  void getRegions() {
+    Future<List<String>> future = loadRegions();
+    future.then((r) {
+      setState(() {
+        _nvePlaces = r;
+      });
+    });
+  }
+
+  void getDataForRegion(String regionId) {
+    Future<List<String>> future = loadDataForRegion(regionId);
+    future.then((d) {
+      setState(() {
+        _regionData = d;
+      });
+    });
+  }
+
+  void _openRegion() {
+    getDataForRegion(_current[1]);
+    print('open single...');
     Navigator.of(context).push(
         new MaterialPageRoute(
-            builder: (context) {
-              return new Scaffold(
-                appBar: new AppBar(
-                  title: new Text('NVE details for ' + _current),
-                ),
-                body: new Text(_current),
-              );
-            }
-        )
+            builder: (context) => new NveRegionData(_regionData)
+
+        ),
     );
   }
+
 
   void _openMultiple() {
     print('open multiple...');
