@@ -24,7 +24,7 @@ class NveOverviewState extends State<NveOverview> {
         itemBuilder: (context, i) {
           if(count < _nvePlaces.length) {
             if (i.isOdd) return new Divider();
-            return _buildRow(_nvePlaces[count++][1], _nvePlaces[count++][0].toString() );
+            return _buildRow(_nvePlaces[count][1], _nvePlaces[count++][0].toString() );
           }
         }
     );

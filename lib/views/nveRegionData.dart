@@ -12,23 +12,20 @@ class NveRegionData extends StatelessWidget {
         appBar: new AppBar(
           title: new Text('NVE details for ' + regionData[0][1]),
         ),
-        body: new Center(
-          child: new ListView(
-              children: <Widget>[
-                new ListTile(title: new Text("Vurdering" + regionData[0][2])),
-                new ListTile(title: new Text("Fra " + regionData[0][3] + " til " + regionData[0][4])),
-                new ListTile(title: new Text(regionData[0][6])),
-                new Divider(),
-                new ListTile(title: new Text("Vurdering" + regionData[1][2])),
-                new ListTile(title: new Text("Fra " + regionData[1][3] + " til " + regionData[1][4])),
-                new ListTile(title: new Text(regionData[1][6])),
-                new Divider(),
-                new ListTile(title: new Text("Vurdering" + regionData[0][2])),
-                new ListTile(title: new Text("Fra " + regionData[2][3] + " til " + regionData[2][4])),
-                new ListTile(title: new Text(regionData[2][6])),
-                new Divider(),
-                new ListTile(title: new Text("Neste vurdering " + regionData[0][5])),
-              ]
+        body: new GridView.count(
+          crossAxisCount: 3,
+          scrollDirection: Axis.horizontal,
+              children: new List.generate(3, (index) {
+                return new Center(
+                  child: new Text("Vurdering" + regionData[index][2], style:new TextStyle(color: Colors.green.withOpacity(1.0))),
+
+                );
+              }
+                /*new Text("Vurdering" + regionData[0][2]),
+                new Text("Fra " + regionData[0][3] + " til " + regionData[0][4]),
+                new Text(regionData[0][6]),*/
+
+
           ),
         )
     );
