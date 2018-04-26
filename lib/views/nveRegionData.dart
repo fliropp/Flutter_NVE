@@ -17,7 +17,20 @@ class NveRegionData extends StatelessWidget {
           scrollDirection: Axis.horizontal,
               children: new List.generate(3, (index) {
                 return new Center(
-                  child: new Text("Vurdering" + regionData[index][2], style:new TextStyle(color: Colors.green.withOpacity(1.0))),
+                  child:
+                      new Container(
+                        child: new Column(
+                          children: [
+                            new Text("Vurdering " + regionData[index][2], style:new TextStyle(color: Colors.green.withOpacity(1.0))),
+                            new Text("Fra " + regionData[0][3] + " til " + regionData[0][4]),
+                            new Text(regionData[0][6]),
+                          ]
+                        ),
+                        margin: const EdgeInsets.all(30.0),
+                        color: Colors.black12,
+                        width: 300.0,
+                        height: 500.0,
+                      )
 
                 );
               }
