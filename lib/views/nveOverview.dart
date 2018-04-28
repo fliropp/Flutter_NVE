@@ -3,6 +3,7 @@ import '../utils/nveRest.dart';
 import '../utils/utils.dart';
 import './nveRegionData2.dart';
 import 'dart:async';
+
 class NveOverview extends StatefulWidget {
 
   @override
@@ -63,7 +64,7 @@ class NveOverviewState extends State<NveOverview> {
             }
             _current = [region, regionId];
           });
-          _openRegion();
+          _getDataForAndOpenRegion(_current[1]);
         },
     );
   }
@@ -94,29 +95,23 @@ class NveOverviewState extends State<NveOverview> {
     });
   }
 
-  void getDataForRegion(String regionId) {
+  void _getDataForAndOpenRegion(String regionId) {
     Future<List<String>> future = loadDataForRegion(regionId);
     future.then((d) {
       setState(() {
         _regionData = d;
       });
-    });
-  }
-
-  void _openRegion() {
-    getDataForRegion(_current[1]);
-    print('open single...');
-    Navigator.of(context).push(
+      Navigator.of(context).push(
         new MaterialPageRoute(
             builder: (context) => new NveRegionData2(_regionData)
 
         ),
-    );
+      );
+    });
+
   }
 
-
-
-
+  
   void _openMultiple() {
     print('open multiple...');
     Navigator.of(context).push(
