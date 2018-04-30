@@ -16,6 +16,7 @@ class NveOverviewState extends State<NveOverview> {
   List _regionData = [];
   final _biggerFont = const TextStyle(fontSize: 18.0);
   final _marked = new Set<String>();
+  Map<String, double> _whereami = new Map<String, double>();
   List<String> _current = [];
 
 
@@ -71,15 +72,16 @@ class NveOverviewState extends State<NveOverview> {
 
   @override
   Widget build(BuildContext context) {
-    if(_nvePlaces.length == 0)
+    if(_nvePlaces.length == 0) {
       getRegions();
-    print('build');
+    }
+    print('build overview');
     return new Scaffold(
       appBar: new AppBar(
         title: new Text('NVE steder', style:new TextStyle(color: Colors.yellowAccent)),
         backgroundColor: Colors.red,
         actions: <Widget>[
-          new IconButton(icon: new Icon(Icons.list), onPressed: _openMultiple)
+          new IconButton(icon: new Icon(Icons.location_on), onPressed: _getGeoLoc)
         ],
       ),
       body: _buildNveList(),
@@ -87,6 +89,7 @@ class NveOverviewState extends State<NveOverview> {
   }
 
   void getRegions() {
+    print('get regions....');
     Future<List<String>> future = loadRegions();
     future.then((r) {
       setState(() {
@@ -111,35 +114,33 @@ class NveOverviewState extends State<NveOverview> {
 
   }
 
-  
-  void _openMultiple() {
-    print('open multiple...');
-    Navigator.of(context).push(
-        new MaterialPageRoute(
-            builder: (context) {
-              final tiles = _marked.map((p) {
-                return new ListTile(
-                  title: new Text(
-                    p,
-                    style: _biggerFont,
-                  ),
-                );
-              },);
-              final divided = ListTile
-                  .divideTiles(
-                context: context,
-                tiles: tiles,
-              )
-                  .toList();
+  VoidCallback _getGeoLoc() {
 
-              return new Scaffold(
-                appBar: new AppBar(
-                  title: new Text('NVE details for n > 1 places...'),
-                ),
-                body: new ListView(children: divided),
-              );
-            }
-        )
-    );
+    Future<Map<String, double>> future = getCurrentLocation();
+    future.then((d) {
+      if(_whereami['altitude'] != d['altitude']) {
+        setState(() {
+          _whereami = d;
+        });
+      }
+      Future<List<String>> future2 = loadDataForRegionByCoordinates(_whereami['longitude'].toString(), _whereami['latitude'].toString());
+      future2.then((d) {
+        setState(() {
+          _regionData = d;
+        });
+        Navigator.of(context).push(
+          new MaterialPageRoute(
+              builder: (context) => new NveRegionData2(_regionData)
+
+          ),
+        );
+      });
+    });
   }
+
+  VoidCallback _setGeoLoc() {
+    print('whereami: ' + _whereami.toString());
+  }
+
+
 }

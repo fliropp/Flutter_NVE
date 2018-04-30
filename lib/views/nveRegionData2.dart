@@ -22,18 +22,18 @@ class NveRegionData2 extends StatelessWidget {
           title: new Text('NVE details for ' + regionData[0][1], style:new TextStyle(color: Colors.yellowAccent)),
           backgroundColor: Colors.red,
         ),
-        body: new Container(
-          child: new Column(
-            children: [
-              buildDetails(regionData[0][3], regionData[0][4], regionData[0][2], regionData[0][6]),
-              buildDetails(regionData[1][3], regionData[1][4], regionData[1][2], regionData[1][6]),
-              buildDetails(regionData[2][3], regionData[2][4], regionData[2][2], regionData[2][6]),
-            ]),
+        body: new SingleChildScrollView(
+          child:new Container(
+            child: new Column(
+              children: [
+                buildDetails(regionData[0][3], regionData[0][4], regionData[0][2], regionData[0][6]),
+                buildDetails(regionData[1][3], regionData[1][4], regionData[1][2], regionData[1][6]),
+                buildDetails(regionData[2][3], regionData[2][4], regionData[2][2], regionData[2][6]),
+              ]),
           color: Colors.grey,
           alignment: FractionalOffset.bottomCenter,
           padding: const EdgeInsets.all(15.0),
-
-
+          )
         )
     );
   }

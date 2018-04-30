@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:location/location.dart';
+import 'package:flutter/services.dart';
+import 'dart:async';
 
 String formatDate(String crapDate){
 
@@ -7,6 +10,30 @@ String formatDate(String crapDate){
   var formatter = new DateFormat('yyyy.MM.dd');
   return formatter.format(date);
 }
+
+Future<Map<String, double>> getCurrentLocation() async {
+
+  Map<String, double> currentLocation;
+  var _location = new Location();
+  String error;
+
+  try {
+    currentLocation = await _location.getLocation;
+    error = null;
+  } on PlatformException catch (e) {
+    if (e.code == 'PERMISSION_DENIED') {
+      error = 'Permission denied';
+      print(error);
+    } else if (e.code == 'PERMISSION_DENIED_NEVER_ASK') {
+      error = 'Permission denied - please ask the user to enable it from the app settings';
+      print(error);
+    }
+    currentLocation = null;
+  }
+  print('--->' + currentLocation.toString());
+  return currentLocation;
+}
+
 
 Color getDangerColor(String dangerLevel){
   switch(dangerLevel) {
