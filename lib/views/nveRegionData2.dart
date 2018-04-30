@@ -18,6 +18,7 @@ class NveRegionData2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+        backgroundColor: Colors.grey,
         appBar: new AppBar(
           title: new Text('NVE details for ' + regionData[0][1], style:new TextStyle(color: Colors.yellowAccent)),
           backgroundColor: Colors.red,

@@ -75,7 +75,6 @@ class NveOverviewState extends State<NveOverview> {
     if(_nvePlaces.length == 0) {
       getRegions();
     }
-    print('build overview');
     return new Scaffold(
       appBar: new AppBar(
         title: new Text('NVE steder', style:new TextStyle(color: Colors.yellowAccent)),
@@ -89,7 +88,6 @@ class NveOverviewState extends State<NveOverview> {
   }
 
   void getRegions() {
-    print('get regions....');
     Future<List<String>> future = loadRegions();
     future.then((r) {
       setState(() {
@@ -107,14 +105,12 @@ class NveOverviewState extends State<NveOverview> {
       Navigator.of(context).push(
         new MaterialPageRoute(
             builder: (context) => new NveRegionData2(_regionData)
-
         ),
       );
     });
-
   }
 
-  VoidCallback _getGeoLoc() {
+  void _getGeoLoc() {
 
     Future<Map<String, double>> future = getCurrentLocation();
     future.then((d) {
@@ -124,6 +120,7 @@ class NveOverviewState extends State<NveOverview> {
         });
       }
       Future<List<String>> future2 = loadDataForRegionByCoordinates(_whereami['longitude'].toString(), _whereami['latitude'].toString());
+
       future2.then((d) {
         setState(() {
           _regionData = d;
@@ -137,10 +134,4 @@ class NveOverviewState extends State<NveOverview> {
       });
     });
   }
-
-  VoidCallback _setGeoLoc() {
-    print('whereami: ' + _whereami.toString());
-  }
-
-
 }
